@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DocRenew - Document Expiry Manager</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">D</div>
+        <div>
+            <h2>DocRenew</h2>
+            <span>Smart Document Manager</span>
+        </div>
+    </div>
+
+    <nav>
+        <button class="nav-item active" data-section="dashboard">
+            <i data-lucide="layout-dashboard"></i>
+            Dashboard
+        </button>
+
+        <button class="nav-item" data-section="documents">
+            <i data-lucide="file-text"></i>
+            My Documents
+        </button>
+
+        <button class="nav-item" data-section="renewals">
+            <i data-lucide="refresh-cw"></i>
+            Renewal Center
+        </button>
+
+        <button class="nav-item" data-section="calendar">
+            <i data-lucide="calendar-days"></i>
+            Expiry Calendar
+        </button>
+
+        <button class="nav-item" data-section="notifications">
+            <i data-lucide="bell"></i>
+            Notifications
+            <span class="notification-count">3</span>
+        </button>
+
+        <button class="nav-item" data-section="family">
+            <i data-lucide="users"></i>
+            Family Profiles
+        </button>
+
+        <button class="nav-item" data-section="settings">
+            <i data-lucide="settings"></i>
+            Settings
+        </button>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <button id="themeToggle" class="theme-button">
+            <i data-lucide="moon"></i>
+            Dark Mode
+        </button>
+
+        <div class="sidebar-user">
+            <div class="avatar">JD</div>
+            <div>
+                <strong>Jadidya</strong>
+                <small>Personal Account</small>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div>
+            <button id="mobileMenu" class="mobile-menu">
+                <i data-lucide="menu"></i>
+            </button>
+
+            <h1 id="pageTitle">Dashboard</h1>
+            <p id="pageSubtitle">
+                Keep your important documents safe and up to date.
+            </p>
+        </div>
+
+        <div class="top-actions">
+
+            <div class="search-box">
+                <i data-lucide="search"></i>
+                <input
+                    type="text"
+                    id="globalSearch"
+                    placeholder="Search documents..."
+                >
+            </div>
+
+            <button class="icon-button" id="notificationButton">
+                <i data-lucide="bell"></i>
+                <span class="notification-dot"></span>
+            </button>
+
+            <div class="profile-menu">
+                <div class="avatar">JD</div>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section id="dashboard" class="page-section active">
+
+        <div class="welcome-card">
+
+            <div>
+                <span class="welcome-label">GOOD MORNING 👋</span>
+
+                <h2>Your documents are under control.</h2>
+
+                <p>
+                    DocRenew helps you monitor document expiry dates
+                    and stay prepared for renewals.
+                </p>
+
+                <button class="primary-button" id="addDocumentButton">
+                    <i data-lucide="plus"></i>
+                    Add Document
+                </button>
+            </div>
+
+            <div class="welcome-illustration">
+                <i data-lucide="files"></i>
+            </div>
+
+        </div>
+
+
+        <!-- STAT CARDS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i data-lucide="file-check"></i>
+                </div>
+
+                <div>
+                    <span>Total Documents</span>
+                    <strong id="totalDocuments">0</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i data-lucide="shield-check"></i>
+                </div>
+
+                <div>
+                    <span>Valid Documents</span>
+                    <strong id="validDocuments">0</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i data-lucide="clock"></i>
+                </div>
+
+                <div>
+                    <span>Expiring Soon</span>
+                    <strong id="expiringDocuments">0</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <i data-lucide="triangle-alert"></i>
+                </div>
+
+                <div>
+                    <span>Expired</span>
+                    <strong id="expiredDocuments">0</strong>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- EXPIRING DOCUMENTS -->
+
+        <div class="section-header">
+
+            <div>
+                <h2>Documents Requiring Attention</h2>
+                <p>Documents that need renewal soon.</p>
+            </div>
+
+            <button class="text-button" data-section-link="documents">
+                View All
+                <i data-lucide="arrow-right"></i>
+            </button>
+
+        </div>
+
+        <div id="attentionDocuments" class="document-grid"></div>
+
+
+        <!-- RECENT ACTIVITY -->
+
+        <div class="section-header">
+            <div>
+                <h2>Recent Activity</h2>
+                <p>Your latest document activity.</p>
+            </div>
+        </div>
+
+        <div id="activityList" class="activity-list"></div>
+
+    </section>
+
+
+    <!-- ================= DOCUMENTS ================= -->
+
+    <section id="documents" class="page-section">
+
+        <div class="page-toolbar">
+
+            <div>
+                <h2>My Documents</h2>
+                <p>Manage all your personal documents.</p>
+            </div>
+
+            <button class="primary-button" id="addDocumentButton2">
+                <i data-lucide="plus"></i>
+                Add Document
+            </button>
+
+        </div>
+
+
+        <div class="filters">
+
+            <div class="search-box large">
+                <i data-lucide="search"></i>
+                <input
+                    id="documentSearch"
+                    type="text"
+                    placeholder="Search by document name..."
+                >
+            </div>
+
+            <select id="categoryFilter">
+                <option value="all">All Categories</option>
+                <option value="Identity">Identity</option>
+                <option value="Vehicle">Vehicle</option>
+                <option value="Education">Education</option>
+                <option value="Travel">Travel</option>
+                <option value="Finance">Finance</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <select id="statusFilter">
+                <option value="all">All Status</option>
+                <option value="valid">Valid</option>
+                <option value="expiring">Expiring Soon</option>
+                <option value="expired">Expired</option>
+            </select>
+
+        </div>
+
+        <div id="documentsGrid" class="document-grid"></div>
+
+    </section>
+
+
+    <!-- ================= RENEWALS ================= -->
+
+    <section id="renewals" class="page-section">
+
+        <div class="page-toolbar">
+            <div>
+                <h2>Renewal Center</h2>
+                <p>Track and manage your document renewal process.</p>
+            </div>
+        </div>
+
+        <div id="renewalList" class="renewal-list"></div>
+
+    </section>
+
+
+    <!-- ================= CALENDAR ================= -->
+
+    <section id="calendar" class="page-section">
+
+        <div class="page-toolbar">
+
+            <div>
+                <h2>Expiry Calendar</h2>
+                <p>See your upcoming document expirations.</p>
+            </div>
+
+            <div class="calendar-controls">
+                <button id="previousMonth" class="icon-button">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+
+                <strong id="calendarMonth"></strong>
+
+                <button id="nextMonth" class="icon-button">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="calendar-wrapper">
+
+            <div class="calendar-weekdays">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+
+            <div id="calendarDays" class="calendar-days"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= NOTIFICATIONS ================= -->
+
+    <section id="notifications" class="page-section">
+
+        <div class="page-toolbar">
+
+            <div>
+                <h2>Notifications</h2>
+                <p>Important reminders about your documents.</p>
+            </div>
+
+            <button id="markAllRead" class="secondary-button">
+                Mark All as Read
+            </button>
+
+        </div>
+
+        <div id="notificationList" class="notification-list"></div>
+
+    </section>
+
+
+    <!-- ================= FAMILY ================= -->
+
+    <section id="family" class="page-section">
+
+        <div class="page-toolbar">
+
+            <div>
+                <h2>Family Profiles</h2>
+                <p>Manage documents for your family members.</p>
+            </div>
+
+            <button id="addFamilyButton" class="primary-button">
+                <i data-lucide="user-plus"></i>
+                Add Member
+            </button>
+
+        </div>
+
+        <div id="familyGrid" class="family-grid"></div>
+
+    </section>
+
+
+    <!-- ================= SETTINGS ================= -->
+
+    <section id="settings" class="page-section">
+
+        <div class="page-toolbar">
+
+            <div>
+                <h2>Settings</h2>
+                <p>Customize your DocRenew experience.</p>
+            </div>
+
+        </div>
+
+
+        <div class="settings-card">
+
+            <div class="setting-row">
+
+                <div>
+                    <strong>Expiry Reminders</strong>
+                    <p>Receive reminders before a document expires.</p>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox" id="reminderToggle" checked>
+                    <span></span>
+                </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div>
+                    <strong>30-Day Reminder</strong>
+                    <p>Notify me 30 days before expiry.</p>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox" id="reminder30" checked>
+                    <span></span>
+                </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div>
+                    <strong>7-Day Reminder</strong>
+                    <p>Notify me 7 days before expiry.</p>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox" id="reminder7" checked>
+                    <span></span>
+                </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div>
+                    <strong>Dark Mode</strong>
+                    <p>Use the dark interface.</p>
+                </div>
+
+                <label class="switch">
+                    <input type="checkbox" id="darkModeSetting">
+                    <span></span>
+                </label>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= DOCUMENT MODAL ================= -->
+
+<div id="documentModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Document</h2>
+                <p>Add a document and its expiry information.</p>
+            </div>
+
+            <button class="close-button" data-close="documentModal">
+                <i data-lucide="x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="documentForm">
+
+            <input type="hidden" id="editingDocumentId">
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Document Name</label>
+
+                    <input
+                        type="text"
+                        id="documentName"
+                        placeholder="e.g. Passport"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Category</label>
+
+                    <select id="documentCategory" required>
+
+                        <option value="">Select Category</option>
+
+                        <option value="Identity">Identity</option>
+                        <option value="Vehicle">Vehicle</option>
+                        <option value="Education">Education</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Other">Other</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Document Number</label>
+
+                    <input
+                        type="text"
+                        id="documentNumber"
+                        placeholder="Enter document number"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Issue Date</label>
+
+                    <input
+                        type="date"
+                        id="issueDate"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Expiry Date</label>
+
+                    <input
+                        type="date"
+                        id="expiryDate"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Owner</label>
+
+                    <select id="documentOwner">
+
+                        <option value="Me">Me</option>
+                        <option value="Family">Family Member</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Upload Document</label>
+
+                <div class="upload-box">
+
+                    <i data-lucide="upload-cloud"></i>
+
+                    <p>
+                        Choose a PDF or image file
+                    </p>
+
+                    <input
+                        type="file"
+                        id="documentFile"
+                        accept=".pdf,.jpg,.jpeg,.png"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    data-close="documentModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Save Document
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FAMILY MODAL ================= -->
+
+<div id="familyModal" class="modal">
+
+    <div class="modal-content small">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Family Member</h2>
+                <p>Create a profile for another person.</p>
+            </div>
+
+            <button class="close-button" data-close="familyModal">
+                <i data-lucide="x"></i>
+            </button>
+
+        </div>
+
+
+        <form id="familyForm">
+
+            <div class="form-group">
+
+                <label>Name</label>
+
+                <input
+                    type="text"
+                    id="familyName"
+                    placeholder="Family member name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Relationship</label>
+
+                <select id="familyRelationship">
+
+                    <option>Father</option>
+                    <option>Mother</option>
+                    <option>Brother</option>
+                    <option>Sister</option>
+                    <option>Spouse</option>
+                    <option>Child</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    data-close="familyModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                >
+                    Add Member
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ================= TOAST ================= -->
+
+<div id="toast" class="toast">
+
+    <i data-lucide="check-circle"></i>
+
+    <span id="toastMessage">
+        Success
+    </span>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
